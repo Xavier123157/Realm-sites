@@ -8,10 +8,10 @@
 <body>
 
 <h1>Next Event Countdown</h1>
-<div id="countdown"></div>
+<input type="text" id="countdownTextbox" readonly>
 
 <script>
-    // Function to calculate and display the countdown
+    // Function to calculate and return the countdown
     function calculateCountdown(events) {
         // Get the current date and time
         var now = new Date().getTime();
@@ -39,12 +39,12 @@
             var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-            // Display the countdown along with the event name
-            document.getElementById("countdown").innerHTML = "Time until " + nextEvent.Event + ": " +
+            // Return the countdown along with the event name
+            return "Time until " + nextEvent.Event + ": " +
                 days + "d " + hours + "h " + minutes + "m " + seconds + "s";
         } else {
-            // If all events have passed, display a message
-            document.getElementById("countdown").innerHTML = "All events have passed.";
+            // If all events have passed, return a message
+            return "All events have passed.";
         }
     }
 
@@ -57,12 +57,21 @@
                 var csvData = this.responseText;
                 var events = parseCSV(csvData);
 
-                // Calculate and display the countdown
-                calculateCountdown(events);
-
                 // Update the countdown every second
                 setInterval(function() {
-                    calculateCountdown(events);
+                    // Calculate the countdown
+                    var countdownText = calculateCountdown(events);
+
+                    // Update the content of the textbox
+                    document.getElementById("countdownTextbox").value = countdownText;
+
+                    var countdownTextbox = document.getElementById("countdownTextbox");
+
+                    // Update the content of the textbox
+                    countdownTextbox.value = countdownText;
+
+                    // Adjust the size of the textbox
+                    countdownTextbox.style.width = "300px";
                 }, 1000);
             }
         };
